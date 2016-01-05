@@ -23,7 +23,7 @@ Required Environment
 Installation
 ------------
 &nbsp;&nbsp;&nbsp;Copy all files in to your web directory and  for configuring the host and AWS account edit db/db.php and provide necessary credentials. The Database credentials and JW player Key is necessary and the Amazon credentials are optional. Remember that Your directory name must be <b><i>VideoCMS</i></b><br/><br/>
-&nbsp;&nbsp;&nbsp;Go to http://<your_host_name>/VideoCMS/firstrun/ This will create the database and tables in your server. <br/>
+&nbsp;&nbsp;&nbsp;Go to http://your_host_name/VideoCMS/firstrun/ This will create the database and tables in your server. <br/>
 
 &nbsp;&nbsp;&nbsp;If you have an AWS account and you have given the credentials in the db.php, then go to manage link from the Navigation menu. Click the Settings button placed at the right corner of the page. Tick the Upload to S3 check box.<br/><br/>
 &nbsp;&nbsp;&nbsp;Yes..!! That's it..<br/><br/>
