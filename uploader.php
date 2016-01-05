@@ -1,6 +1,6 @@
 <?php
 	include("db/db.php");
-	require 'amazone/aws-autoloader.php';
+	require 'amazon/aws-autoloader.php';
 	use Aws\S3\S3Client;
 	use Aws\S3\Exception\S3Exception;
 
