@@ -3,7 +3,7 @@ VideoCMS
 =========
 VideoCMS is a web based open source video management system developed in PHP and MySQL along with Amazon Web Services integration. 
 The System is designed in such a way that user can upload, watch and manage his/her personal videos.The system stores videos either 
-in local server or in Amazon S3 based on the user settings. Which means User without Amazon WS account can store videos in local server, an use without amazon account can store videos in the AWS S3
+in local server or in Amazon S3 based on the user settings. Which means User without Amazon WS account can store videos in local server, and user with Amazon account can store videos in the Amazon S3
 
 Features
 --------
@@ -23,7 +23,7 @@ Required Environment
 Installation
 ------------
 &nbsp;&nbsp;&nbsp;Copy all files in to your web directory and  for configuring the host and AWS account edit db/db.php and provide necessary credentials. The Database credentials and JW player Key is necessary and the Amazon credentials are optional. Remember that Your directory name must be <b><i>VideoCMS</i></b><br/><br/>
-&nbsp;&nbsp;&nbsp;Go to http://<your_host_name>/VideoCMS/firstrun/ This will create the database and tables in your server. <br/>
+&nbsp;&nbsp;&nbsp;Go to http://your_host_name/VideoCMS/firstrun/ This will create the database and tables in your server. <br/>
 
 &nbsp;&nbsp;&nbsp;If you have an AWS account and you have given the credentials in the db.php, then go to manage link from the Navigation menu. Click the Settings button placed at the right corner of the page. Tick the Upload to S3 check box.<br/><br/>
 &nbsp;&nbsp;&nbsp;Yes..!! That's it..<br/><br/>
@@ -40,7 +40,7 @@ How to Use
 
 Who we are ?
 -----------
-VideoCMS is developed at [Nethram](www.nethram.com). Nethram is a Silicon Valley based telecommunications and cloud innovator. Our mission is to provide the cloud telephony solutions that the big boys use at an affordable price by listening to your needs and providing you with what you actually want.
+VideoCMS is developed at [Nethram](http://www.nethram.com). Nethram is a Silicon Valley based telecommunications and cloud innovator. Our mission is to provide the cloud telephony solutions that the big boys use at an affordable price by listening to your needs and providing you with what you actually want.
 
 
 
