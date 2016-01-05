@@ -3,7 +3,7 @@ VideoCMS
 =========
 VideoCMS is a web based open source video management system developed in PHP and MySQL along with Amazon Web Services integration. 
 The System is designed in such a way that user can upload, watch and manage his/her personal videos.The system stores videos either 
-in local server or in Amazon S3 based on the user settings. Which means User without Amazon WS account can store videos in local server, and user without amazon account can store videos in the AWS S3
+in local server or in Amazon S3 based on the user settings. Which means User without Amazon WS account can store videos in local server, and user with Amazon account can store videos in the AWS S3
 
 Features
 --------
