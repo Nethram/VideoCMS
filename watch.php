@@ -116,8 +116,19 @@
                   <h3 class="box-title"></h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                   <div id="myElement">Loading the player...</div>
+                   <!-- <div id="myElement">Loading the player...</div> -->
+                   <!--<div id="myElement">Loading the player...</div>-->
                    
+
+                   <!--adding new-->
+                    <!-- <div id="myElement">Loading the player...</div> -->
+                   <div style="align-content: center;height:550px">
+                    <video width="100%" height="100%" controls>
+                      <source src= "<?php echo $video_url; ?>" type="video/mp4">
+                      your browser does not support the video tag.
+                      
+                    </video>
+                    <!--new ends-->
   
   
                 </div><!-- /.box-body -->
@@ -130,10 +141,15 @@
           <div class="row">
             <div class="col-md-6">
               <div class="info-box">
+
+
                   <div class="form-group">
                     <label>Embed this video</label>
-                    <input onclick="select();" class="form-control" value="&lt;div&gt;&lt;object width=&quot;294&quot; height=&quot;193&quot;&gt;&lt;param name=&quot;movie&quot; value=&quot;<?php if(strpos($video_url,"s3.amazonaws")) echo $video_url; else echo 'http://'.$_SERVER['HTTP_HOST'].'/VideoCMS/'.$video_url;?>&quot;&gt;&lt;/param&gt;&lt;param name=&quot;allowFullScreen&quot; value=&quot;true&quot;&gt;&lt;/param&gt;&lt;param name=&quot;allowscriptaccess&quot; value=&quot;always&quot;&gt;&lt;/param&gt;&lt;embed src=&quot;<?php if(strpos($video_url,"s3.amazonaws")) echo $video_url; else echo 'http://'.$_SERVER['HTTP_HOST'].'/VideoCMS/'.$video_url;?>&quot; type=&quot;application/x-shockwave-flash&quot; allowscriptaccess=&quot;always&quot; allowfullscreen=&quot;true&quot; width=&quot;294&quot; height=&quot;193&quot;&gt;&lt;/embed&gt;&lt;/object&gt;&lt;/div&gt;" readonly="readonly" type="text">
+
+                    <input onclick="select();" class="form-control" value="&lt;video width=&quot;100%&quot; height=&quot;100%&quot; controls&gt;&lt;source src=&quot;<?php if(strpos($video_url,"s3.amazonaws")) echo $video_url; else echo 'http://'.$_SERVER['HTTP_HOST'].'/VideoCMS/'.$video_url;?>&quot; type=&quot;video/mp4&quot;&gt;&lt;/video&gt;&lt;/div&gt;" readonly="readonly" type="text">
+                 
                   </div>
+
 
                   <div class="form-group">
                     <label>Share this video</label>
@@ -167,7 +183,7 @@
                       <h4 class="modal-title" id="myModalLabel">Upload Video</h4>
                     </div>
                     <div class="modal-body">
-                      <form role="form" id="uploadform" enctype="multipart/form-data">
+                      <form method="post" role="form" id="uploadform" enctype="multipart/form-data" action="uploader.php" >
                           <div class="info-box">
                             <div class="form-group">
                               <label>Select Video File</label>
@@ -183,6 +199,17 @@
                             
                             <input type="submit" value="Upload" class="btn btn-primary" id="upload"/>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                             <!-- progress bar added -->
+                                        <div id="myProgress" style="display:none; width: 100%;background-color: #ddd;">
+                                                  <div id="myBar"style="width: 10%;
+                                                                        height: 30px;
+                                                                        background-color: #4CAF50;
+                                                                        text-align: center;
+                                                                        line-height: 30px;
+                                                                        color: white;">10%
+                                                  </div>  
+                                        </div>
                           </div>
                       </form>
                     </div>
@@ -193,10 +220,18 @@
               </div>
                 <!-- /.modal-dialog -->
             </div>
+
+
+
+               <!-- jQuery 2.1.4 -->
+ <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+ 
+ <!-- adding jquery form plugin --> 
+ <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script>
     
    
     <!-- jQuery 2.1.4 -->
-    <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <!-- <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script> -->
     <!-- Bootstrap 3.3.5 -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
@@ -214,46 +249,63 @@
     <script>
 
     $(document).ready(function(){
-      $("#uploadform").on('submit',(function(e){
-          e.preventDefault();
-          var data=new FormData(this);
+     
+       var percent = $('#percent');
+          var status = $('#status');
 
-          $.ajax({
-                
-                  type:"POST",
-                  url:"uploader.php",
-                  data:data,
-                  contentType: false,
-                  cache: false,
-                  processData:false,
-                  success:function(response)
-                  {
-                   if(response=="Invalid")
+          $('#uploadform').ajaxForm({
+              beforeSend: function() {
+              status.empty();
+              $("#upload").val("uploading...");
+              document.getElementById("upload").setAttribute("disabled", 'true');
+              $('#myProgress').show();
+              var elem = document.getElementById("myBar");   
+              var percentVal = '0%';
+              elem.style.width = percentVal; 
+              elem.innerHTML = percentVal;
+            },
+              uploadProgress: function(event, position, total, percentComplete) {
+                var elem = document.getElementById("myBar"); 
+              var percentVal = percentComplete + '%';
+              elem.style.width = percentVal; 
+              elem.innerHTML = percentVal;
+            },
+              complete: function(xhr) {
+             
+
+                  if(xhr.responseText=="Invalid")
                     {
                       bootbox.alert("Invalid File Formats");
+                      document.getElementById("upload").disabled = false;
+                      $("#upload").val("upload");
+                      $('#myProgress').hide();
                     }
 
-                    else if(!isNaN(response))
+                    else if(!isNaN(xhr.responseText))
                     {
-                      bootbox.alert("Uploaded Successfully");
+
+                       bootbox.alert("Uploaded Successfully");
+                        document.getElementById("upload").disabled = false;
+                      $("#upload").val("upload");
+                       $('#myProgress').hide();
+                                           
                       /*$("#example1").load(location.href + " #example1");*/
-                      location.href="watch.php?video="+response;
+                      location.href="watch.php?video="+xhr.responseText;
                     }
                     
                     else
                     {
                       bootbox.alert("Uploading Failed");
+                      document.getElementById("upload").disabled = false;
+                      $("#upload").html("upload");
+                      $('#myProgress').hide();
                     }
-                    
-                  },
-                  error:function()
-                  {
-                    alert("Error During Ajax Call..!!!");
-                  }
-               });
+            }
+          });
 
-              
-        }))
+       
+
+
 
             $("#copyUrl").click(function(){
 
@@ -272,7 +324,7 @@
 
     });
     </script>
-    <script src="jwplayer/jwplayer.js"></script>
+   <!--  <script src="jwplayer/jwplayer.js"></script>
     <script>jwplayer.key="<?php echo $jwkey;?>";</script>
     <script type="text/javascript">
         var playerInstance = jwplayer("myElement");
@@ -290,7 +342,7 @@
 
    
       });
-    </script>
+    </script> -->
 
 
   </body>

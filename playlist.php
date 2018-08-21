@@ -4,6 +4,8 @@
   $get_videos=mysql_query("select distinct videos.* from videos,categories,vid_cat where videos.video_id IN (select video_id from vid_cat where cat_id=$category_id)");
     
   $playlist="";
+  $videos_list = array();
+  $i=1;
   while(($array=mysql_fetch_array($get_videos))!=null)
   {
     $video_name="";
@@ -14,6 +16,10 @@
     $video_thumb=$array['thumnail'];
     $video_url=$array['s3_url'];
     $video_desc=$array['description'];
+    $videos_list[$i]=$video_url;
+    $i++;
+
+    
 
       /*playlist: [{file: 'myvideo.mp4',image: 'myposter.png',title: 'My Video',description:'123456'},]*/
 
@@ -21,10 +27,11 @@
 
       $playlist=$playlist."{file:\"".$video_url."\",image:\"".$video_thumb."\",title:\"".$video_name."\",description:\"".$video_desc."\"},";
     }
-   
+   $first_video=$videos_list[1];
   $query_cat_name=mysql_query("select category_name from categories where category_id=$category_id");
   $row_cat_name=mysql_fetch_row($query_cat_name);
   $category_name=$row_cat_name[0];
+  $i=$i-1;
    
     
 ?>
@@ -129,9 +136,20 @@
                 <div class="box-header">
                   <h3 class="box-title"><?=$category_name?> Playlist</h3>
                 </div><!-- /.box-header -->
-                <div class="box-body">
-                   <div id="myElement">Loading the player...</div>
-                </div><!-- /.box-body -->
+               
+                  
+                <!--new code for video player-->
+                <video width="400px" height="400px" id="myVideo" data="5" autoplay>
+                  <source src= "<?php echo $first_video ?>" type="video/mp4">
+                  your browser does not support the video tag.
+                </video>
+
+                <!-- <video src="<?php echo $video_url; ?>" id="myVideo" autoplay>
+                  video not supported
+              </video> -->
+
+                
+
               </div>
         
             </div>
@@ -205,6 +223,30 @@
 
 
     <script>
+     // var count=1;
+    var player=document.getElementById('myVideo');
+    player.addEventListener('ended',myHandler,false);
+   
+    var video_array = <? echo json_encode($videos_list); ?>;
+    var limit =<? echo($i)?>;
+    var k=2;
+    function myHandler(e) {
+                if(!e) 
+                {
+                 e = window.event;
+               }
+                  if(k<=limit)
+                  {
+                      player.src=video_array[k];
+                      k++;
+                  }
+                  else
+                  {
+                     location.href="index.php";
+                  }
+        }
+
+
 
     $(document).ready(function(){
       $("#uploadform").on('submit',(function(e){
@@ -252,7 +294,13 @@
 
     });
     </script>
-    
+
+
+
+  
+<!--new code ends here-->
+
+   <!--  
     <script src="jwplayer/jwplayer.js"></script>
     <script>jwplayer.key="<?php echo $jwkey;?>";</script>
     <script type="text/javascript">
@@ -267,7 +315,7 @@
 
    
       });
-    </script>
+    </script> -->
   </body>
 </html>
 

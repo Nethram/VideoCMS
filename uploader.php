@@ -8,6 +8,7 @@
 
 	if((isset($_FILES["video"]["name"]))&&(isset($_FILES["thumbnail"]["name"])))
 	{
+		
 		$video_file=$_FILES["video"]["name"];
 		$thumbnail_image=$_FILES["thumbnail"]["name"];
 		
@@ -31,14 +32,14 @@
 
 		$thumbnail_target = "uploads/thumbnails/"; 
 		$thumbnail_target = $thumbnail_target .mt_rand(1000000,10000000000). basename( $_FILES["thumbnail"]["name"]);
-
-
+	
 		$url="";
 
 		if((move_uploaded_file($_FILES['video']['tmp_name'], $video_target))&&(move_uploaded_file($_FILES['thumbnail']['tmp_name'], $thumbnail_target)))
 		{
 			/*echo $video_target."<br/>";
 			echo $thumbnail_target;*/
+			
 			$db_insert="";
 			if(isset($_POST["re_upload_video_id"]))
 			{
@@ -75,7 +76,7 @@
 					$url=$video_target;
 				}
 				
-
+				
 				$db_insert=mysql_query("insert into videos values(null,'$video_file','','','$thumbnail_target','$url' )");
 				if($db_insert)
 				{
@@ -154,6 +155,12 @@ function s3Url($keyname,$filepath)
     }
 }
 
+
+
+// function write_to_log($str)
+// {
+// 	file_put_contents("upload_log.txt", gmdate("Y-m-d H:i:s")." --> ".$str."\r\r",FILE_APPEND);
+// }
 
 	
 ?>

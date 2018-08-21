@@ -306,7 +306,7 @@
                       <h4 class="modal-title" id="myModalLabel">Upload Video</h4>
                     </div>
                     <div class="modal-body">
-                      <form role="form" id="uploadform" enctype="multipart/form-data">
+                      <form method="post" role="form" id="uploadform" enctype="multipart/form-data" action="uploader.php" >
                           <div class="info-box">
                             <div class="form-group">
                               <label>Select Video File</label>
@@ -322,6 +322,23 @@
                             
                             <input type="submit" value="Upload" class="btn btn-primary" id="upload"/>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                           
+                            
+                             <!-- progress bar added -->
+                                        <div id="myProgress" style="display:none; width: 100%;background-color: #ddd;">
+                                                  <div id="myBar"style="width: 10%;
+                                                                        height: 30px;
+                                                                        background-color: #4CAF50;
+                                                                        text-align: center;
+                                                                        line-height: 30px;
+                                                                        color: white;">10%
+                                                  </div>  
+                                        </div>
+
+
+                                <div>
+                                </div>       
+                             
                           </div>
                       </form>
                     </div>
@@ -463,7 +480,14 @@
 
 
     <!-- jQuery 2.1.4 -->
-    <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
+ <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+ 
+ <!-- adding jquery form plugin --> 
+ <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script>
+
+
+
+    <!-- <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script> -->
     <!-- Bootstrap 3.3.5 -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <!-- DataTables -->
@@ -492,8 +516,7 @@
 
     $(document).ready(function(){
       
-        $('.edit').click(function(e){
-          
+        $("#example1").on("click",".edit",function(){ 
           
           var vid ="video_id="+$(this).data('vid');
           var video_id=$(this).data('vid');
@@ -578,12 +601,12 @@
         })
 
 
-        $(".delete").click(function(e){
+        $("#example1").on("click",".delete",function(e){
             e.preventDefault();
             var vid ="video_id="+$(this).data('vid');
-            bootbox.confirm("Are you sure?", function(result) 
+            bootbox.confirm("Are you sure?", function(result)   
             {
-                
+              
                 if(result==true)
                 {
                     $.ajax({
@@ -610,48 +633,67 @@
             }); 
         })
 
-       $("#uploadform").on('submit',(function(e){
-          e.preventDefault();
 
-          var data=new FormData(this);
 
-          $.ajax({
-                
-                  type:"POST",
-                  url:"uploader.php",
-                  data:data,
-                  contentType: false,
-                  cache: false,
-                  processData:false,
-                  success:function(response)
-                  {
-                   
-                    if(response=="Invalid")
+
+           var percent = $('#percent');
+          var status = $('#status');
+
+          $('#uploadform').ajaxForm({
+              beforeSend: function() {
+              status.empty();
+              $("#upload").val("uploading...");
+              document.getElementById("upload").setAttribute("disabled", 'true');
+              $('#myProgress').show();
+              var elem = document.getElementById("myBar");   
+              var percentVal = '0%';
+              elem.style.width = percentVal; 
+              elem.innerHTML = percentVal;
+            },
+              uploadProgress: function(event, position, total, percentComplete) {
+                var elem = document.getElementById("myBar"); 
+              var percentVal = percentComplete + '%';
+              elem.style.width = percentVal; 
+              elem.innerHTML = percentVal;
+            },
+              complete: function(xhr) {
+             
+
+                  if(xhr.responseText=="Invalid")
                     {
                       bootbox.alert("Invalid File Formats");
+                      document.getElementById("upload").disabled = false;
+                      $("#upload").val("upload");
+                      $('#myProgress').hide();
                     }
 
-                    else if(!isNaN(response))
+                    else if(!isNaN(xhr.responseText))
                     {
-                      bootbox.alert("Uploaded Successfully");
+
+                       bootbox.alert("Uploaded Successfully");
+                        document.getElementById("upload").disabled = false;
+                      $("#upload").val("upload");
+                       $('#myProgress').hide();
+                                           console.log("inside",xhr.response);
                       /*$("#example1").load(location.href + " #example1");*/
-                      location.href="watch.php?video="+response;
+                      location.href="watch.php?video="+xhr.responseText;
                     }
                     
                     else
                     {
                       bootbox.alert("Uploading Failed");
+                      document.getElementById("upload").disabled = false;
+                      $("#upload").html("upload");
+                      $('#myProgress').hide();
                     }
-                    
-                  },
-                  error:function()
-                  {
-                    alert("Error During Ajax Call..!!!");
-                  }
-               });
+            }
+          });
 
-              
-        }))
+       
+
+
+
+
 
       $("#re_uploadform").on('submit',(function(e){
           e.preventDefault();

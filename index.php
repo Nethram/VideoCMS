@@ -138,6 +138,28 @@
         while($array=mysql_fetch_array($get_cat))
         {
             $cat_id=$array["category_id"];
+            
+             $get_videos=mysql_query("select distinct videos.* from videos,categories,vid_cat where videos.video_id IN (select video_id from vid_cat where cat_id=$cat_id)");
+              $array2=mysql_fetch_array($get_videos);
+              if($array2["name"]=="")
+              {
+                  ?>
+                    <div class="box box-defaul" >
+              
+            <div class="box-header with-border">
+              <h3 class="box-title"><?=$array["category_name"];?></h3>
+              <div class="box-tools pull-right">
+
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
+              </div>
+            </div><!-- /.box-header -->
+
+
+                  <?php
+              }
+              else
+              {
 
       ?>
 		    <div class="box box-defaul" >
@@ -194,6 +216,7 @@
 		</div>
        <?php
           }
+        }
       ?>
     <div class="box box-defaul" >
               
@@ -266,24 +289,41 @@
                                 <h4 class="modal-title" id="myModalLabel">Upload Video</h4>
                         </div>
                         <div class="modal-body">
-                            <form role="form" id="uploadform" enctype="multipart/form-data" >
-                                <div class="info-box">
-                                	<div class="form-group">
-                                		<label>Select Video File</label>
-										<input type="file" class="form-control" name="video"/>
-									</div>
+                           <form method="post" role="form" id="uploadform" enctype="multipart/form-data" action="uploader.php" >
+                          <div class="info-box">
+                            <div class="form-group">
+                              <label>Select Video File</label>
+                              <input type="file" class="form-control" name="video" id="video" required/>
+                            </div>
 
-									<div class="form-group">
-										<label>Select Thumbnail Image</label>
-										<input type="file" class="form-control" name="thumbnail"/>
-									</div>
+                            <div class="form-group">
+                              <label>Select Thumbnail Image</label>
+                              <input type="file" class="form-control" name="thumbnail" id="video" required/>
+                            </div>
 
-									 
-									
-									<input type="submit" value="Upload" class="btn btn-primary"/>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								</div>
-                            </form>
+                   
+                            
+                            <input type="submit" value="Upload" class="btn btn-primary" id="upload"/>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                           
+                            <div></div>
+                             <!-- progress bar added -->
+                                        <div id="myProgress" style="display:none; width: 100%;background-color: #ddd;">
+                                                  <div id="myBar"style="width: 10%;
+                                                                        height: 30px;
+                                                                        background-color: #4CAF50;
+                                                                        text-align: center;
+                                                                        line-height: 30px;
+                                                                        color: white;">10%
+                                                  </div>  
+                                        </div>
+
+
+                                <div>
+                                </div>       
+                             
+                          </div>
+                      </form>
                         </div>
                         <div class="modal-footer">
                         </div>
@@ -294,8 +334,15 @@
             </div>
             <!-- /.modal -->
 
+                <!-- jQuery 2.1.4 -->
+ <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+ 
+ <!-- adding jquery form plugin --> 
+ <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script>
+
+
     <!-- jQuery 2.1.4 -->
-    <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <!-- <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script> -->
     <!-- Bootstrap 3.3.5 -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
 
@@ -322,46 +369,59 @@
     <script>
 
     $(document).ready(function(){
-    	$("#uploadform").on('submit',(function(e){
-          e.preventDefault();
-          var data=new FormData(this);
 
-          $.ajax({
-                
-                  type:"POST",
-                  url:"uploader.php",
-                  data:data,
-                  contentType: false,
-                  cache: false,
-                  processData:false,
-                  success:function(response)
-                  {
-                    if(response=="Invalid")
+var percent = $('#percent');
+          var status = $('#status');
+
+          $('#uploadform').ajaxForm({
+              beforeSend: function() {
+              status.empty();
+              $("#upload").val("uploading...");
+              document.getElementById("upload").setAttribute("disabled", 'true');
+              $('#myProgress').show();
+              var elem = document.getElementById("myBar");   
+              var percentVal = '0%';
+              elem.style.width = percentVal; 
+              elem.innerHTML = percentVal;
+            },
+              uploadProgress: function(event, position, total, percentComplete) {
+                var elem = document.getElementById("myBar"); 
+              var percentVal = percentComplete + '%';
+              elem.style.width = percentVal; 
+              elem.innerHTML = percentVal;
+            },
+              complete: function(xhr) {
+             
+
+                  if(xhr.responseText=="Invalid")
                     {
                       bootbox.alert("Invalid File Formats");
+                      document.getElementById("upload").disabled = false;
+                      $("#upload").val("upload");
+                      $('#myProgress').hide();
                     }
 
-                    else if(!isNaN(response))
+                    else if(!isNaN(xhr.responseText))
                     {
-                      bootbox.alert("Uploaded Successfully");
+
+                       bootbox.alert("Uploaded Successfully");
+                        document.getElementById("upload").disabled = false;
+                      $("#upload").val("upload");
+                       $('#myProgress').hide();
+                                           
                       /*$("#example1").load(location.href + " #example1");*/
-                      location.href="watch.php?video="+response;
+                      location.href="watch.php?video="+xhr.responseText;
                     }
                     
                     else
                     {
                       bootbox.alert("Uploading Failed");
+                      document.getElementById("upload").disabled = false;
+                      $("#upload").html("upload");
+                      $('#myProgress').hide();
                     }
-                    
-                  },
-                  error:function()
-                  {
-                    bootbox.alert("Error During Ajax Call..!!!");
-                  }
-               });
-
-              
-        }))
+            }
+          });
 
        
     });
