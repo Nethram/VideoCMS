@@ -116,12 +116,9 @@
                   <h3 class="box-title"></h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                   <!-- <div id="myElement">Loading the player...</div> -->
-                   <!--<div id="myElement">Loading the player...</div>-->
                    
 
                    <!--adding new-->
-                    <!-- <div id="myElement">Loading the player...</div> -->
                    <div style="align-content: center;height:550px">
                     <video width="100%" height="100%" controls>
                       <source src= "<?php echo $video_url; ?>" type="video/mp4">
@@ -289,7 +286,6 @@
                       $("#upload").val("upload");
                        $('#myProgress').hide();
                                            
-                      /*$("#example1").load(location.href + " #example1");*/
                       location.href="watch.php?video="+xhr.responseText;
                     }
                     
@@ -324,26 +320,6 @@
 
     });
     </script>
-   <!--  <script src="jwplayer/jwplayer.js"></script>
-    <script>jwplayer.key="<?php echo $jwkey;?>";</script>
-    <script type="text/javascript">
-        var playerInstance = jwplayer("myElement");
-          playerInstance.setup({
-    
-   
-          file: "<?=$video_url?>",
-          image: '<?=$video_thumb?>',
-          title: '<?=$video_name?>',
-          description:'<?=$video_desc?>',
-          autostart:false,
-          width: 1067,
-          height: 360,
-          aspectratio: "16:9",
-
-   
-      });
-    </script> -->
-
-
+ 
   </body>
 </html>

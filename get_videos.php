@@ -1,7 +1,6 @@
 <?php
 	include("db/db.php");
-	$category_id=$_POST["category"];
-	/*echo $category_id;*/
+	$category_id=$_POST["category"];   
 	$get_videos=mysql_query("select distinct videos.* from videos,categories,vid_cat where videos.video_id IN (select video_id from vid_cat where cat_id=$category_id)");
 	while($array=mysql_fetch_array($get_videos))
 				{

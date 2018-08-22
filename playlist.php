@@ -19,12 +19,6 @@
     $videos_list[$i]=$video_url;
     $i++;
 
-    
-
-      /*playlist: [{file: 'myvideo.mp4',image: 'myposter.png',title: 'My Video',description:'123456'},]*/
-
-      /*$playlist=$playlist."{0:{src:\"".$video_url."\",type:\"video/mp4\"}},";*/
-
       $playlist=$playlist."{file:\"".$video_url."\",image:\"".$video_thumb."\",title:\"".$video_name."\",description:\"".$video_desc."\"},";
     }
    $first_video=$videos_list[1];
@@ -144,11 +138,7 @@
                   your browser does not support the video tag.
                 </video>
 
-                <!-- <video src="<?php echo $video_url; ?>" id="myVideo" autoplay>
-                  video not supported
-              </video> -->
-
-                
+               
 
               </div>
         
@@ -223,7 +213,6 @@
 
 
     <script>
-     // var count=1;
     var player=document.getElementById('myVideo');
     player.addEventListener('ended',myHandler,false);
    
@@ -272,7 +261,6 @@
                     else if(!isNaN(response))
                     {
                       bootbox.alert("Uploaded Successfully");
-                      /*$("#example1").load(location.href + " #example1");*/
                       location.href="watch.php?video="+response;
                     }
                     
@@ -297,25 +285,7 @@
 
 
 
-  
-<!--new code ends here-->
 
-   <!--  
-    <script src="jwplayer/jwplayer.js"></script>
-    <script>jwplayer.key="<?php echo $jwkey;?>";</script>
-    <script type="text/javascript">
-        var playerInstance = jwplayer("myElement");
-          playerInstance.setup({
-    
-          playlist:[<?=$playlist?>],
-          autostart:false,
-          width: 1067,
-          height: 360,
-          aspectratio: "16:9",
-
-   
-      });
-    </script> -->
   </body>
 </html>
 

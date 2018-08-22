@@ -205,7 +205,6 @@
                     <tbody>
                       <?php
                         
-                        /*select distinct videos.*,categories.category_name from videos,categories,vid_cat where videos.video_id=vid_cat.video_id and vid_cat.cat_id=categories.category_id*/
                         $get_videos=mysql_query("select * from videos order by video_id asc");
                         while($array=mysql_fetch_array($get_videos))
                         {
@@ -487,7 +486,6 @@
 
 
 
-    <!-- <script src="plugins/jQuery/jQuery-2.1.4.min.js"></script> -->
     <!-- Bootstrap 3.3.5 -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <!-- DataTables -->
@@ -529,7 +527,6 @@
                     data:vid,
                     success:function(response)
                     {
-                       /* alert(response);*/
                         var obj = JSON.parse(response);
 
                         if(obj[2]=="")
@@ -580,7 +577,6 @@
         $("#category").change(function(){
               if($("#category").val()=="other")
               {
-                /*$("#select2").css('visibility', 'hidden');*/
                 var type="text";
                 var name="new_category";
                 var placeholder="Enter Category";
@@ -595,7 +591,6 @@
                 element.setAttribute("class",clas);
                 dest.appendChild(element);
                  $("#category").select2("enable", false)
-                /*$("#select2").show();*/
 
               }
         })
@@ -675,7 +670,7 @@
                       $("#upload").val("upload");
                        $('#myProgress').hide();
                                            console.log("inside",xhr.response);
-                      /*$("#example1").load(location.href + " #example1");*/
+                     
                       location.href="watch.php?video="+xhr.responseText;
                     }
                     
@@ -715,7 +710,6 @@
                     {
                       bootbox.alert("Re-Uploaded Successfully");
                       localStorage.video_id="";
-                      /*$("#example1").load(location.href + " #example1");*/
                       location.href="watch.php?video="+response;
                     }
                     else if(response=="Invalid")
